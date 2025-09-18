@@ -1,0 +1,9 @@
+
+
+Solución: 
+
+Resultado Óptimo 
+ (agente/tarea)
+2 1
+1 2
+3 3

@@ -1,6 +1,6 @@
 # Asignación de tareas por ramificación y poda
 
-[![Tests](https://github.com/xerchion/AT-RyP/actions/workflows/tests.yml/badge.svg)](https://github.com/xerchion/AT-RyP/actions/workflows/tests.yml)
+[![Tests](https://github.com/xerchion/AsignacionTareas/actions/workflows/tests.yml/badge.svg)](https://github.com/xerchion/AsignacionTareas/actions/workflows/tests.yml)
 
 Programa de línea de comandos en Java que resuelve el problema de asignación: hay *n* agentes y *n* tareas, cada agente tarda un tiempo distinto en cada tarea, y hay que dar una tarea a cada agente de forma que el tiempo total sea el menor posible.
 

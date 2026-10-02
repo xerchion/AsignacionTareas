@@ -14,7 +14,7 @@
  * - Estructura de datos completa binaria representada como array
  * - Operaciones de inserción y extracción en O(log n)
  * - Indexación base-1 para simplificar cálculos de navegación padre/hijo
- * - Capacidad fija configurable con validación de límites
+ * - Capacidad inicial configurable; el array se duplica cuando se llena
  * - Construcción eficiente desde array existente en O(n)
  *
  * Invariantes del montículo:
@@ -28,14 +28,14 @@
  *            Comparable<T>
  *
  * @author Pasteleros
- * @version 2.0
+ * @version 2.1
  * @since 1.0
  */
 public final class Heap<T extends Comparable<T>> {
 
     // ========== CONSTANTES ==========
 
-    /** Capacidad máxima por defecto del montículo */
+    /** Capacidad inicial por defecto del montículo */
     private static final int DEFAULT_CAPACITY = 100;
 
     // ========== ATRIBUTOS PRIVADOS ==========
@@ -43,14 +43,14 @@ public final class Heap<T extends Comparable<T>> {
     /** Número de elementos actualmente almacenados en el montículo */
     private int size;
 
-    /** Capacidad máxima del montículo */
-    private final int maxCapacity;
+    /** Capacidad actual del montículo; crece cuando se llena */
+    private int maxCapacity;
 
     /**
      * Array genérico que almacena los elementos del montículo (índice 0 no
      * utilizado)
      */
-    private final T[] vector;
+    private T[] vector;
 
     // ========== CONSTRUCTORES ==========
 
@@ -62,9 +62,9 @@ public final class Heap<T extends Comparable<T>> {
     }
 
     /**
-     * Constructor que crea un montículo vacío con capacidad específica.
+     * Constructor que crea un montículo vacío con capacidad inicial específica.
      *
-     * @param capacity Capacidad máxima del montículo. Debe ser mayor que 0.
+     * @param capacity Capacidad inicial del montículo. Debe ser mayor que 0.
      * @throws IllegalArgumentException si capacity es menor o igual a 0
      */
     @SuppressWarnings("unchecked")
@@ -86,19 +86,13 @@ public final class Heap<T extends Comparable<T>> {
      *
      * @param sourceArray Array inicial con los elementos para construir el
      *                    montículo
-     * @throws IllegalArgumentException si sourceArray es null o excede la capacidad
-     *                                  máxima
+     * @throws IllegalArgumentException si sourceArray es null
      */
     @SuppressWarnings("unchecked")
     public Heap(T[] sourceArray) {
         if (sourceArray == null) {
             throw new IllegalArgumentException("El array fuente no puede ser null");
         }
-        if (sourceArray.length > DEFAULT_CAPACITY) {
-            throw new IllegalArgumentException(
-                    "El array supera la capacidad máxima: " + sourceArray.length + " > " + DEFAULT_CAPACITY);
-        }
-
         this.maxCapacity = Math.max(DEFAULT_CAPACITY, sourceArray.length);
         this.vector = (T[]) new Comparable[this.maxCapacity + 1];
         this.vector[0] = null; // Índice 0 no utilizado
@@ -116,7 +110,7 @@ public final class Heap<T extends Comparable<T>> {
      * específica.
      *
      * @param sourceArray Array inicial con los elementos
-     * @param capacity    Capacidad máxima del montículo
+     * @param capacity    Capacidad inicial del montículo
      * @throws IllegalArgumentException si los parámetros son inválidos
      */
     @SuppressWarnings("unchecked")
@@ -150,19 +144,18 @@ public final class Heap<T extends Comparable<T>> {
      *
      * El elemento se añade al final del montículo y luego se hace "flotar" hacia
      * arriba
-     * hasta encontrar su posición correcta. Complejidad: O(log n).
+     * hasta encontrar su posición correcta. Si el montículo está lleno, antes
+     * se duplica su capacidad. Complejidad: O(log n) amortizado.
      *
      * @param element Elemento a insertar
      * @throws IllegalArgumentException si element es null
-     * @throws IllegalStateException    si el montículo está lleno
      */
     public void insert(T element) {
         if (element == null) {
             throw new IllegalArgumentException("No se puede insertar un elemento null");
         }
         if (size >= maxCapacity) {
-            throw new IllegalStateException(
-                    "El montículo está lleno. Capacidad máxima: " + maxCapacity);
+            grow();
         }
 
         size++;
@@ -222,9 +215,10 @@ public final class Heap<T extends Comparable<T>> {
     }
 
     /**
-     * Verifica si el montículo está lleno.
+     * Verifica si el montículo ha agotado su capacidad actual. No impide
+     * insertar: la siguiente inserción ampliará el montículo.
      *
-     * @return true si ha alcanzado la capacidad máxima, false en caso contrario
+     * @return true si ha alcanzado la capacidad actual, false en caso contrario
      */
     public boolean isFull() {
         return size >= maxCapacity;
@@ -240,18 +234,19 @@ public final class Heap<T extends Comparable<T>> {
     }
 
     /**
-     * Obtiene la capacidad máxima del montículo.
+     * Obtiene la capacidad actual del montículo.
      *
-     * @return Capacidad máxima
+     * @return Capacidad actual
      */
     public int capacity() {
         return maxCapacity;
     }
 
     /**
-     * Obtiene el número de espacios libres en el montículo.
+     * Obtiene el número de espacios libres antes de que el montículo tenga que
+     * crecer.
      *
-     * @return Número de elementos que se pueden insertar aún
+     * @return Número de elementos que caben sin ampliar la capacidad
      */
     public int remainingCapacity() {
         return maxCapacity - size;
@@ -309,6 +304,14 @@ public final class Heap<T extends Comparable<T>> {
     }
 
     // ========== MÉTODOS PRIVADOS AUXILIARES ==========
+
+    /**
+     * Duplica la capacidad del montículo conservando sus elementos.
+     */
+    private void grow() {
+        this.maxCapacity = this.maxCapacity * 2;
+        this.vector = java.util.Arrays.copyOf(this.vector, this.maxCapacity + 1);
+    }
 
     /**
      * Construye el montículo desde un array desordenado usando el algoritmo de

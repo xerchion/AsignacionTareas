@@ -1,0 +1,25 @@
+# Compilados
+target/
+bin/
+*.class
+
+# Base de datos local de jqwik
+.jqwik-database
+
+# Editores
+.vscode/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Material local que no forma parte del repositorio
+Memoria.docx
+agent.txt
+convertir_a_pdf.ps1
+web-memoria/

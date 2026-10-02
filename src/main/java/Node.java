@@ -24,7 +24,7 @@
  * - Validación de parámetros en operaciones críticas
  *
  * @author Pasteleros
- * @version 2.0
+ * @version 2.1
  * @since 1.0
  */
 public final class Node implements Comparable<Node> {
@@ -358,11 +358,13 @@ public final class Node implements Comparable<Node> {
      *
      * Los nodos se ordenan por estimación optimista ascendente, lo que permite
      * que los nodos más prometedores (menor coste estimado) tengan prioridad
-     * en algoritmos de búsqueda con cola de prioridad.
+     * en algoritmos de búsqueda con cola de prioridad. Si dos nodos tienen la
+     * misma estimación, va primero el que tiene más tareas asignadas.
      *
      * @param other Nodo a comparar
-     * @return valor negativo si este nodo es "mejor" (menor estimación),
-     *         cero si son equivalentes, valor positivo si es "peor"
+     * @return valor negativo si este nodo es "mejor" (menor estimación o, a
+     *         igual estimación, más tareas asignadas), cero si son
+     *         equivalentes, valor positivo si es "peor"
      * @throws NullPointerException si other es null
      */
     @Override
@@ -372,7 +374,15 @@ public final class Node implements Comparable<Node> {
         }
 
         // Comparación por estimación optimista (menor es mejor)
-        return Integer.compare(this.optimalEstimate, other.optimalEstimate);
+        int byEstimate = Integer.compare(this.optimalEstimate, other.optimalEstimate);
+        if (byEstimate != 0) {
+            return byEstimate;
+        }
+
+        // A igual estimación, primero el nodo con más tareas asignadas: está más
+        // cerca de una solución completa y evita que los empates se recorran
+        // en anchura
+        return Integer.compare(other.lastOrder, this.lastOrder);
     }
 
     // ========== MÉTODOS DE UTILIDAD ==========

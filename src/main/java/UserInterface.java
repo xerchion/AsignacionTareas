@@ -142,7 +142,9 @@ public final class UserInterface {
             this.inputFileController = new FileController(fileName);
             this.gameData = this.inputFileController.getData();
 
-            displayMessage(String.format("Datos cargados exitosamente desde: %s", fileName));
+            if (this.gameData != null) {
+                displayMessage(String.format("Datos cargados exitosamente desde: %s", fileName));
+            }
 
         } catch (Exception e) {
             throw new RuntimeException("Error al cargar datos desde archivo: " + e.getMessage(), e);

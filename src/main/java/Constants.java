@@ -52,7 +52,7 @@ public final class Constants {
      * programa.
      * Incluye todas las opciones disponibles y sus descripciones.
      */
-    public static final String HELP = "SINTAXIS: tareas [-t][-h] [fichero entrada]\n" +
+    public static final String HELP = "SINTAXIS: tareas [-t][-h] [fichero entrada] [fichero salida]\n" +
             "-t                     Traza el algoritmo\n" +
             "-h                     Muestra esta ayuda\n" +
             "[fichero entrada]      Nombre del fichero de entrada\n" +

@@ -52,7 +52,7 @@ public final class TaskAssignmentSystem {
     private static final String SYSTEM_NAME = "Sistema de Asignación Óptima de Tareas";
 
     /** Versión del sistema */
-    private static final String SYSTEM_VERSION = "v2.0";
+    private static final String SYSTEM_VERSION = "v2.1";
 
     /** Formato para timestamps en logs */
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

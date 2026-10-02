@@ -35,6 +35,20 @@ class HeapTest {
         assertEquals(4, heap.getTop());
         assertEquals(7, heap.getTop());
     }
+
+    @Test
+    void testGrowsBeyondInitialCapacity() {
+        Heap<Integer> heap = new Heap<>(4);
+        for (int value = 1000; value >= 1; value--) {
+            heap.insert(value);
+        }
+        assertEquals(1000, heap.size());
+        assertTrue(heap.isValidHeap());
+        for (int expected = 1; expected <= 1000; expected++) {
+            assertEquals(expected, heap.extractMin());
+        }
+        assertTrue(heap.isEmpty());
+    }
 }
 
 class HeapPropertyTest {
